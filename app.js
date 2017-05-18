@@ -104,16 +104,17 @@ function queryOpenWeather(state) {
 ////////////////////////////////////////////////////////////////////
 
 const renderWeather = function(state, element) {
-  element.html(`<p>City: ${state.dailyForcast.cityName}</p>
-          <p>Country: ${state.dailyForcast.sys.country}</p>
-          <p>Main: ${state.dailyForcast.weather.main}</p>
-          <p>Description: ${state.dailyForcast.weather.description.charAt(0).toUpperCase() + state.dailyForcast.weather.description.slice(1)}</p>
-          <p>Temp: ${Math.floor(KtoF(state.dailyForcast.main.temp)*100)/100} Farenheit</p>
-          <p>Pressure: ${state.dailyForcast.main.pressure}</p>
-          <p>Humidity: ${state.dailyForcast.main.humidity}</p>
-          <p>Wind Speed: ${state.dailyForcast.wind.speed}</p>
-          <p>Wind Degrees: ${state.dailyForcast.wind.degrees}</p>
-          <p>Clouds: ${state.dailyForcast.clouds.all}</p>`);
+  const daily = state.dailyForcast;
+  element.html(`<p>City: ${daily.cityName}</p>
+          <p>Country: ${daily.sys.country}</p>
+          <p>Main: ${daily.weather.main}</p>
+          <p>Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)}</p>
+          <p>Temp: ${Math.floor(KtoF(daily.main.temp)*100)/100} Farenheit</p>
+          <p>Pressure: ${daily.main.pressure}</p>
+          <p>Humidity: ${daily.main.humidity}</p>
+          <p>Wind Speed: ${daily.wind.speed}</p>
+          <p>Wind Degrees: ${daily.wind.degrees}</p>
+          <p>Clouds: ${daily.clouds.all}</p>`);
 }
 
 
@@ -171,7 +172,7 @@ function initMap() {
   setMap(map, appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
-  
+
   //clicking on google maps
   google.maps.event.addDomListener(map, 'click', callbackGoogle);
 
