@@ -35,9 +35,6 @@ const appState = {
     fiveDayForcast: {},
     sixteenDayForcast: {},
 };
-function cleanData(dirtyData) {
-  console.log(dirtyData);
-}
 
 /////////////////////////////////////////////////////////////////////
 //////////////   State modification functions   //////////////////////
