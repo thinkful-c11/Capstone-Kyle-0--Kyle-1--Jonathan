@@ -5,6 +5,7 @@
 const appState={
     yourLoc: {},
     map:null,
+    marker:[],
     markerLocation: {
       lat: null,
       long: null
@@ -53,6 +54,17 @@ function setLatLng(pos, state){
     state.yourLoc.lng = pos.lng;
 }
 
+function makeMarker(state){
+     state.marker.push( new google.maps.Marker({
+          position: state.markerLocation,
+          map: state.map,
+          title: 'Hello World!'
+        }));
+}
+
+function clearMarker(state){
+  state.marker.map(el=>el.setMap(null));
+}
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -70,7 +82,7 @@ function queryOpenWeather(state) {
 }
 
 const addWeatherToState = function(state, response) {
-
+  console.log(response);
   if(response.weather) {
     state.dailyForcast.weather.main = response.weather[0].main;
     state.dailyForcast.weather.description = response.weather[0].description;
@@ -121,15 +133,19 @@ function initMap() {
     zoom: 4,
     center: uluru,
   });
+  
 
   setMap(map,appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
   google.maps.event.addDomListener(map, 'click', function(response) {
+    clearMarker(appState);
     appState.markerLocation.lat = response.latLng.lat();
     appState.markerLocation.lng = response.latLng.lng();
+    makeMarker(appState);
     queryOpenWeather(appState);
   });
+
 }
 function getYourCoords(infoWindow,state){
     if (navigator.geolocation) {

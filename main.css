@@ -1,5 +1,6 @@
 #map {
   height: 100%;
+  width:75%;
 }
 
 
@@ -9,4 +10,29 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+/*mobile first*/
+.information{
+    display:inline-block;
+    position:fixed;
+    top:0;
+    right:0;
+    width:25%;
+    height:100%;
+    background-color:blue;
+}
+
+@media only screen and (max-device-width: 420px) {
+    .map{
+        height:75%;
+        width:100%;
+    }
+    .information{
+        display:inline-block;
+        position:fixed;
+        bottom:0;
+        height:25%;
+        background-color:black !important;
+    }
 }
