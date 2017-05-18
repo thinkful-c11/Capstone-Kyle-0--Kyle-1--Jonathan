@@ -1,0 +1,12 @@
+Display the map covering 75% of the page, and have a blank div on the right future use.
+
+on page load, map points to current location // navigator.geolocation.getCurrentPosition((res) => {console.log(res) })
+
+clicking the map console.log lat and lng
+
+clicking the map console.log current weather
+
+display current weather info on the right div
+
+display all weather informaion on the right div
+

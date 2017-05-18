@@ -1,0 +1,19 @@
+Our app uses googleMaps and openWeather so when a user clicks on a location,
+it displays the current weather for that location.
+
+What problem are you solving?
+    People can use this for knowing the weather of the location that they're
+    traveling to.
+Who are the stakeholders? (e.g. business leads, marketing, engineering)
+    Rich is the money man and business lead. Theresa markets our fabulous project
+    to potential students! "Wow look what we teach!". Engineering is the tremendous
+    trio of Kyle, Kyle, and Jonathan.
+User stories
+    User wants to know the weather of a location and clicks on that location.
+    User can search for a zip code and the map moves to that location, and displays that current weather
+    User can save locations for future use.
+    User sees current location when app loads.
+Mockups
+
+Open questions
+
