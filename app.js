@@ -1,10 +1,11 @@
-/* global google 
+/* global google
   global $
   global navigator
 */
 const appState = {
     yourLoc: {},
     map:null,
+    marker:[],
     markerLocation: {
       lat: null,
       long: null
@@ -24,7 +25,7 @@ const appState = {
         degrees: null,
       },
       clouds: {
-        all: null 
+        all: null
       },
       sys: {
         country: null,
@@ -53,23 +54,54 @@ function setLatLng(pos, state){
     state.yourLoc.lng = pos.lng;
 }
 
+function makeMarker(state){
+     state.marker.push( new google.maps.Marker({
+          position: state.markerLocation,
+          map: state.map,
+          title: 'Hello World!'
+        }));
+}
+
+function clearMarker(state){
+  state.marker.map(el=>el.setMap(null));
+}
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function queryOpenWeather() {
+function queryOpenWeather(state) {
   const parameters = {
-    appid: "4902823442c59be1e82130ed0fb15339",
-    lat: appState.markerLocation.lat,
-    lon: appState.markerLocation.lng,
+    lat: state.markerLocation.lat,
+    lon: state.markerLocation.lng,
   };
-  
- $.getJSON('http://api.openweathermap.org/data/2.5/weather', parameters, response => {
-    console.log(response);
-  });
+
+  $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+
+      addWeatherToState(state, response);
+    });
 }
 
+const addWeatherToState = function(state, response) {
+  console.log(response);
+  if(response.weather) {
+    state.dailyForcast.weather.main = response.weather[0].main;
+    state.dailyForcast.weather.description = response.weather[0].description;
 
+    state.dailyForcast.main.temp = response.main.temp;
+    state.dailyForcast.main.pressure = response.main.pressure;
+    state.dailyForcast.main.humidity = response.main.humidity;
+
+    state.dailyForcast.wind.speed = response.wind.speed;
+    state.dailyForcast.wind.degrees = response.wind.deg;
+
+    state.dailyForcast.clouds.all = response.clouds.all;
+
+    state.dailyForcast.sys.country = response.sys.country;
+
+    state.dailyForcast.cityName = response.name;
+
+    }
+}
 
 
 /////////////////////////////////////////////////////////////////////
@@ -101,19 +133,19 @@ function initMap() {
     zoom: 4,
     center: uluru,
   });
-  
+
   setMap(map,appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
 
-  
-  
   google.maps.event.addDomListener(map, 'click', function(response) {
-      appState.markerLocation.lat = response.latLng.lat();
-      appState.markerLocation.lng = response.latLng.lng();
-      setMarker(appState);
-      queryOpenWeather();
+    clearMarker(appState);
+    appState.markerLocation.lat = response.latLng.lat();
+    appState.markerLocation.lng = response.latLng.lng();
+    makeMarker(appState);
+    queryOpenWeather(appState);
   });
+
 }
 function getYourCoords(infoWindow,state){
     if (navigator.geolocation) {
@@ -146,4 +178,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, map) {
                             'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
 }
-
