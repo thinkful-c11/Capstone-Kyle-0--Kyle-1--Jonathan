@@ -2,7 +2,7 @@
   global $
   global navigator
 */
-const appState={
+const appState = {
     yourLoc: {},
     map:null,
     markerLocation: {
@@ -59,11 +59,12 @@ function setLatLng(pos, state){
 
 function queryOpenWeather() {
   const parameters = {
+    appid: "4902823442c59be1e82130ed0fb15339",
     lat: appState.markerLocation.lat,
     lon: appState.markerLocation.lng,
   };
   
-  $.getJSON('https://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+ $.getJSON('http://api.openweathermap.org/data/2.5/weather', parameters, response => {
     console.log(response);
   });
 }
@@ -100,14 +101,18 @@ function initMap() {
     zoom: 4,
     center: uluru,
   });
-
+  
   setMap(map,appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
+
+  
+  
   google.maps.event.addDomListener(map, 'click', function(response) {
-    appState.markerLocation.lat = response.latLng.lat();
-    appState.markerLocation.lng = response.latLng.lng();
-    queryOpenWeather();
+      appState.markerLocation.lat = response.latLng.lat();
+      appState.markerLocation.lng = response.latLng.lng();
+      setMarker(appState);
+      queryOpenWeather();
   });
 }
 function getYourCoords(infoWindow,state){
