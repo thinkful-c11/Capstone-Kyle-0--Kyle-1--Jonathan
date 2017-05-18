@@ -3,17 +3,12 @@
   global navigator
 */
 const appState = {
-  yourLoc: {},
-  map: null,
-  marker: [],
-  markerLocation: {
-    lat: null,
-    long: null
-  },
-  dailyForcast: {
-    weather: {
-      main: null,
-      description: null,
+    yourLoc: {},
+    map:null,
+    marker:[],
+    markerLocation: {
+      lat: null,
+      long: null
     },
     main: {
       temp: null,
@@ -149,6 +144,7 @@ function initMap() {
   setMap(map, appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
+
   google.maps.event.addDomListener(map, 'click', function(response) {
     clearMarker(appState);
     appState.markerLocation.lat = response.latLng.lat();

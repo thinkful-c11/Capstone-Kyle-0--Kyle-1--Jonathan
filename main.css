@@ -3,7 +3,6 @@
   width:75%;
 }
 
-
 /* Optional: Makes the sample page fill the window. */
 
 html, body {
@@ -20,19 +19,22 @@ html, body {
     right:0;
     width:25%;
     height:100%;
-    background-color:blue;
 }
 
-@media only screen and (max-device-width: 420px) {
-    .map{
+@media only screen and (max-device-width: 480px) {
+    html, body {
+        width: 100%;
+    }
+    
+    #map{
         height:75%;
         width:100%;
     }
     .information{
-        display:inline-block;
-        position:fixed;
-        bottom:0;
+        display: block;
+        position: relative;
+        bottom: 0;
         height:25%;
-        background-color:black !important;
+        width: 100%;
     }
 }
