@@ -11,6 +11,10 @@ html, body {
   padding: 0;
 }
 
+.info-title{
+    font-size:20px;
+    text-align: center;
+}
 /*mobile first*/
 .information{
     display:inline-block;

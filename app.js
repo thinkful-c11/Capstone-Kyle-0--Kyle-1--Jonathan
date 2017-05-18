@@ -2,6 +2,9 @@
   global $
   global navigator
 */
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////        appState + helper functions ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 const appState = {
   yourLoc: {},
   map: null,
@@ -36,6 +39,11 @@ const appState = {
   sixteenDayForcast: {},
 };
 
+//Convert Kelvin to Farenheit
+function KtoF(temp) {
+  return (9/5*(temp - 273) + 32);
+}
+
 /////////////////////////////////////////////////////////////////////
 //////////////   State modification functions   //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -43,14 +51,25 @@ const appState = {
 //Set map to google maps
 function setMap(map, state) {
   state.map = map;
+  return state.map;
 }
 
 //set Lat and Lng
 function setLatLng(pos, state) {
-  state.yourLoc.lat = pos.lat;
-  state.yourLoc.lng = pos.lng;
+  const yourLoc = state.yourLoc;
+  yourLoc.lat = pos.lat;
+  yourLoc.lng = pos.lng;
+  return state.yourLoc;
+}
+//Set Marker Lat and Lng
+function setMarkerLatLng(data,state){
+    const markerLoc = appState.markerLocation;
+    markerLoc.lat = data.latLng.lat();
+    markerLoc.lng = data.latLng.lng();
+    return markerLoc;
 }
 
+//make a marker every time u click
 function makeMarker(state) {
   state.marker.push(new google.maps.Marker({
     position: state.markerLocation,
@@ -59,6 +78,7 @@ function makeMarker(state) {
   }));
 }
 
+//clear the marker from the map
 function clearMarker(state) {
   state.marker.map(el => el.setMap(null));
 }
@@ -78,12 +98,6 @@ function queryOpenWeather(state) {
   });
 }
 
-function KtoF(temp) {
-  return (9/5 (temp - 273) + 32);
-}
-
-
-
 
 /////////////////////////////////////////////////////////////////////
 //////////////     Render functions          //////////////////////
@@ -94,7 +108,7 @@ const renderWeather = function(state, element) {
           <p>Country: ${state.dailyForcast.sys.country}</p>
           <p>Main: ${state.dailyForcast.weather.main}</p>
           <p>Description: ${state.dailyForcast.weather.description.charAt(0).toUpperCase() + state.dailyForcast.weather.description.slice(1)}</p>
-          <p>Temp: ${KtoF(state.dailyForcast.main.temp)} Kelvin</p>
+          <p>Temp: ${Math.floor(KtoF(state.dailyForcast.main.temp)*100)/100} Farenheit</p>
           <p>Pressure: ${state.dailyForcast.main.pressure}</p>
           <p>Humidity: ${state.dailyForcast.main.humidity}</p>
           <p>Wind Speed: ${state.dailyForcast.wind.speed}</p>
@@ -107,26 +121,35 @@ const renderWeather = function(state, element) {
 ///////////          CALLBACK FUNCTIONS        /////////////
 ///////////////////////////////////////////////////////////
 
-
+//openweather
 const addWeatherToState = function(state, response) {
+  const daily = state.dailyForcast;
   if (response.weather) {
-    state.dailyForcast.weather.main = response.weather[0].main;
-    state.dailyForcast.weather.description = response.weather[0].description;
+    daily.weather.main = response.weather[0].main;
+    daily.weather.description = response.weather[0].description;
 
-    state.dailyForcast.main.temp = response.main.temp;
-    state.dailyForcast.main.pressure = response.main.pressure;
-    state.dailyForcast.main.humidity = response.main.humidity;
+    daily.main.temp = response.main.temp;
+    daily.main.pressure = response.main.pressure;
+    daily.main.humidity = response.main.humidity;
 
-    state.dailyForcast.wind.speed = response.wind.speed;
-    state.dailyForcast.wind.degrees = response.wind.deg;
+    daily.wind.speed = response.wind.speed;
+    daily.wind.degrees = response.wind.deg;
 
-    state.dailyForcast.clouds.all = response.clouds.all;
+    daily.clouds.all = response.clouds.all;
 
-    state.dailyForcast.sys.country = response.sys.country;
+    daily.sys.country = response.sys.country;
 
-    state.dailyForcast.cityName = response.name;
+    daily.cityName = response.name;
     renderWeather(state, $('.weather-information'));
   }
+}
+
+//Google
+function callbackGoogle(response){
+    clearMarker(appState);
+    setMarkerLatLng(response,appState);
+    makeMarker(appState);
+    queryOpenWeather(appState);
 }
 
 //////////////////////////////////////////////////////////////
@@ -148,17 +171,14 @@ function initMap() {
   setMap(map, appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
-
-  google.maps.event.addDomListener(map, 'click', function(response) {
-    clearMarker(appState);
-    appState.markerLocation.lat = response.latLng.lat();
-    appState.markerLocation.lng = response.latLng.lng();
-    makeMarker(appState);
-    queryOpenWeather(appState);
-  });
+  
+  //clicking on google maps
+  google.maps.event.addDomListener(map, 'click', callbackGoogle);
 
 }
 
+
+//Get your Coordinates
 function getYourCoords(infoWindow, state) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
