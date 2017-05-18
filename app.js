@@ -109,7 +109,6 @@ const renderWeather = function(state, element) {
 
 
 const addWeatherToState = function(state, response) {
-  console.log(response);
   if (response.weather) {
     state.dailyForcast.weather.main = response.weather[0].main;
     state.dailyForcast.weather.description = response.weather[0].description;
