@@ -12,3 +12,20 @@ display current weather info on the right div
 
 display all weather informaion on the right div
 
+//////////////////////
+
+Making the data more useful to humans
+    - general styling
+    - fharenheit temp
+    - add images to weather conditions http://openweathermap.org/weather-conditions
+
+add search for zip code 
+    -it should display a marker
+    -focus on that location
+
+add 5 day forcast
+
+add 16 day forcast
+
+refactor
+

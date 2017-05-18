@@ -78,6 +78,10 @@ function queryOpenWeather(state) {
   });
 }
 
+function KtoF(temp) {
+  return (9/5 (temp - 273) + 32);
+}
+
 
 
 
@@ -90,7 +94,7 @@ const renderWeather = function(state, element) {
           <p>Country: ${state.dailyForcast.sys.country}</p>
           <p>Main: ${state.dailyForcast.weather.main}</p>
           <p>Description: ${state.dailyForcast.weather.description.charAt(0).toUpperCase() + state.dailyForcast.weather.description.slice(1)}</p>
-          <p>Temp: ${state.dailyForcast.main.temp} Kelvin</p>
+          <p>Temp: ${KtoF(state.dailyForcast.main.temp)} Kelvin</p>
           <p>Pressure: ${state.dailyForcast.main.pressure}</p>
           <p>Humidity: ${state.dailyForcast.main.humidity}</p>
           <p>Wind Speed: ${state.dailyForcast.wind.speed}</p>
@@ -121,7 +125,7 @@ const addWeatherToState = function(state, response) {
     state.dailyForcast.sys.country = response.sys.country;
 
     state.dailyForcast.cityName = response.name;
-    renderWeather(state, $('.information'));
+    renderWeather(state, $('.weather-information'));
   }
 }
 
