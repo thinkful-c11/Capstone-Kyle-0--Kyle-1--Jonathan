@@ -1,2 +1,2 @@
 openweather - 4902823442c59be1e82130ed0fb15339
-googleMaps  - 
+googleMaps  - AIzaSyDuNzKBvsQPptdGctcDVnOB3JzondJbwHA
