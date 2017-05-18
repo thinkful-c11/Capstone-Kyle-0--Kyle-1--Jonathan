@@ -4,6 +4,8 @@ on page load, map points to current location // navigator.geolocation.getCurrent
 
 clicking the map console.log lat and lng
 
+clicking the map add marker to that location
+
 clicking the map console.log current weather
 
 display current weather info on the right div

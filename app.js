@@ -1,7 +1,43 @@
+/* global google 
+  global $
+  global navigator
+*/
 const appState={
-    yourLoc:{lat: -25.363, lng: 131.044},
+    yourLoc: {},
     map:null,
+    markerLocation: {
+      lat: null,
+      long: null
+    },
+    dailyForcast: {
+      weather: {
+        main: null,
+        description: null,
+      },
+      main: {
+        temp: null,
+        pressure: null,
+        humidity: null,
+      },
+      wind: {
+        speed: null,
+        degrees: null,
+      },
+      clouds: {
+        all: null 
+      },
+      sys: {
+        country: null,
+      },
+      cityName: null,
+    },
+    fiveDayForcast: {},
+    sixteenDayForcast: {},
+};
+function cleanData(dirtyData) {
+  console.log(dirtyData);
 }
+
 /////////////////////////////////////////////////////////////////////
 //////////////   State modification functions   //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -17,6 +53,23 @@ function setLatLng(pos, state){
     state.yourLoc.lng = pos.lng;
 }
 
+/////////////////////////////////////////////////////////////////////
+//////////////     OpenWeather          //////////////////////
+////////////////////////////////////////////////////////////////////
+
+function queryOpenWeather() {
+  const parameters = {
+    lat: appState.markerLocation.lat,
+    lon: appState.markerLocation.lng,
+  };
+  
+  $.getJSON('https://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+    console.log(response);
+  });
+}
+
+
+
 
 /////////////////////////////////////////////////////////////////////
 //////////////     Render functions          //////////////////////
@@ -29,6 +82,8 @@ function setLatLng(pos, state){
 //////////////////////////////////////////////////////////////
 ///////////          CALLBACK FUNCTIONS        /////////////
 ///////////////////////////////////////////////////////////
+
+
 $(function(){
 
 })
@@ -45,13 +100,15 @@ function initMap() {
     zoom: 4,
     center: uluru,
   });
-//   var marker = new google.maps.Marker({
-//     position: uluru,
-//     map: map
-//   });
+
   setMap(map,appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
+  google.maps.event.addDomListener(map, 'click', function(response) {
+    appState.markerLocation.lat = response.latLng.lat();
+    appState.markerLocation.lng = response.latLng.lng();
+    queryOpenWeather();
+  });
 }
 function getYourCoords(infoWindow,state){
     if (navigator.geolocation) {
