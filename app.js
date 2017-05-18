@@ -3,12 +3,17 @@
   global navigator
 */
 const appState = {
-    yourLoc: {},
-    map:null,
-    marker:[],
-    markerLocation: {
-      lat: null,
-      long: null
+  yourLoc: {},
+  map: null,
+  marker: [],
+  markerLocation: {
+    lat: null,
+    long: null
+  },
+  dailyForcast: {
+    weather: {
+      main: null,
+      description: null,
     },
     main: {
       temp: null,
