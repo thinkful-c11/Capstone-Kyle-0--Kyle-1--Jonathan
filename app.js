@@ -87,7 +87,7 @@ const addWeatherToState = function(state, response) {
     state.dailyForcast.sys.country = response.sys.country;
 
     state.dailyForcast.cityName = response.name;
-
+    renderWeather(state, $('.information'));
     }
 }
 
@@ -96,7 +96,9 @@ const addWeatherToState = function(state, response) {
 //////////////     Render functions          //////////////////////
 ////////////////////////////////////////////////////////////////////
 
-
+const renderWeather = function(state, element) {
+  element.html(`<p>Temp: ${state.dailyForcast.main.temp}</p>`);
+}
 
 
 
