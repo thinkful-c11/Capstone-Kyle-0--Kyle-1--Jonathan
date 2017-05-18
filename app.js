@@ -1,4 +1,4 @@
-/* global google 
+/* global google
   global $
   global navigator
 */
@@ -24,7 +24,7 @@ const appState={
         degrees: null,
       },
       clouds: {
-        all: null 
+        all: null
       },
       sys: {
         country: null,
@@ -57,18 +57,39 @@ function setLatLng(pos, state){
 //////////////     OpenWeather          //////////////////////
 ////////////////////////////////////////////////////////////////////
 
-function queryOpenWeather() {
+function queryOpenWeather(state) {
   const parameters = {
-    lat: appState.markerLocation.lat,
-    lon: appState.markerLocation.lng,
+    lat: state.markerLocation.lat,
+    lon: state.markerLocation.lng,
   };
-  
-  $.getJSON('https://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
-    console.log(response);
-  });
+
+  $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+
+      addWeatherToState(state, response);
+    });
 }
 
+const addWeatherToState = function(state, response) {
 
+  if(response.weather) {
+    state.dailyForcast.weather.main = response.weather[0].main;
+    state.dailyForcast.weather.description = response.weather[0].description;
+
+    state.dailyForcast.main.temp = response.main.temp;
+    state.dailyForcast.main.pressure = response.main.pressure;
+    state.dailyForcast.main.humidity = response.main.humidity;
+
+    state.dailyForcast.wind.speed = response.wind.speed;
+    state.dailyForcast.wind.degrees = response.wind.deg;
+
+    state.dailyForcast.clouds.all = response.clouds.all;
+
+    state.dailyForcast.sys.country = response.sys.country;
+
+    state.dailyForcast.cityName = response.name;
+
+    }
+}
 
 
 /////////////////////////////////////////////////////////////////////
@@ -107,7 +128,7 @@ function initMap() {
   google.maps.event.addDomListener(map, 'click', function(response) {
     appState.markerLocation.lat = response.latLng.lat();
     appState.markerLocation.lng = response.latLng.lng();
-    queryOpenWeather();
+    queryOpenWeather(appState);
   });
 }
 function getYourCoords(infoWindow,state){
@@ -141,4 +162,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, map) {
                             'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
 }
-
