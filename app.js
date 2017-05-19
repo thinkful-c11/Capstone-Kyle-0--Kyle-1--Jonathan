@@ -168,8 +168,7 @@ function min(temp,state){
   return state.lowestTemp;
 }
 //adding the low temp and high temp obj to state
-function addLowHighObj(response,state,fun){
-  const forecast = state.tommorrowForecast;
+function addLowHighObj(response,state, forecast,fun){
   forecast.list.push(highTemp(fun,state));
   forecast.list.push(lowTemp(fun,state));
   return forecast.list;
@@ -180,11 +179,11 @@ function resetHLTemp(state){
   state.lowestTemp=Number.POSITIVE_INFINITY;
 }
 //reset list
-function resetHLList(state){
-  const forecast = state.tommorrowForecast;
+function resetHLList(forecast){
   forecast.list = [];
   return forecast.list.length;
 }
+
 function setCountryCity(state,response){
   state.tommorrowForecast.city.country = response.city.country;
   state.tommorrowForecast.city.name = response.city.name;
@@ -207,11 +206,11 @@ function queryOpenWeather(state) {
   });
   $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
     resetHLTemp(state);
-    resetHLList(state);
+    resetHLList(state.tommorrowForecast);
+    resetHLList(state.dayAfterForecast);
     setCountryCity(state,response);
-    addLowHighObj(response,state,getNewDay1(response));
-    console.log(state.tommorrowForecast);
-    //addWeatherToState(state.tommorrowForecast,response);
+    addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
+    addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
   });
 }
 
@@ -221,8 +220,8 @@ function queryOpenWeatherZip(state, code) {
   };
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+    addDailyWeatherToState(state, response);
 
-    addWeatherToState(state, response);
     clearMarker(state);
     makeMarker(state);
   });
@@ -244,6 +243,21 @@ const renderDailyWeather = function(state, element) {
           <p>It will blow at ${daily.wind.speed} meter/sec in ${windDirection(daily.wind.degrees)} direction</p>
           <p>Clouds: ${daily.clouds.all}% cloudy</p>`);
 };
+
+const renderForecast = function(state, element) {
+  console.log(state);
+  const weather = state.list[0];
+  element.html(`<p>City: ${state.city.name}</p>
+          <p class="country">Country: ${state.city.country}</p>
+          <p class="description">Description: ${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)} <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"</p>           
+          <p>Temp: ${Math.floor(KtoF(weather.main.temp))} Farenheit</p>
+          <p>Pressure: ${weather.main.pressure}</p>
+          <p>Humidity: ${weather.main.humidity}%</p>
+          <p>Wind Speed: ${weather.wind.speed}</p>
+          <p>Wind Degrees: ${weather.wind.deg} ${windDirection(weather.wind.deg)}</p>
+          <p>It will blow at ${weather.wind.speed} meter/sec in ${windDirection(weather.wind.degrees)} direction</p>
+          <p>Clouds: ${weather.clouds.all}% cloudy</p>`);
+}
 
 //////////////////////////////////////////////////////////////
 ///////////          CALLBACK FUNCTIONS        /////////////
@@ -278,9 +292,7 @@ const addDailyWeatherToState = function(state, response) {
     renderDailyWeather(state, $('.weather-information'));
   }
 };
-function addForecastWeatherToState(state,response){
 
-}
 //Google
 function callbackGoogle(response){
     clearMarker(appState);
@@ -290,13 +302,23 @@ function callbackGoogle(response){
 }
 const eventListeners = function(state){
 
+  const weatherInformation = $('.weather-information');
+
   $('#zip-code-search').submit(function(event) {
     event.preventDefault();
     queryOpenWeatherZip(state, $('.zip-code-submit').val());
   });
+
+  $('#current').click(function(event){
+    renderDailyWeather(state, weatherInformation);
+  })
   
   $('#tommorrow').click(function(event) {
-    //renderWeather()
+    renderForecast(state.tommorrowForecast, weatherInformation);
+  });
+
+  $('#day-after').click(function(event) {
+    renderForecast(state.dayAfterForecast, weatherInformation);
   })
 }
 //////////////////////////////////////////////////////////////
