@@ -24,12 +24,16 @@ html, body {
     width:25%;
     height:100%;
 }
+.country {
+  margin-bottom: 0;
+}
 
 .description {
   position: relative;
+  margin-top: 0;
 }
 img {
-  position: absolute;
+  /*position: absolute;*/
   bottom: 0;
   height: 30px;
   width: 30px;

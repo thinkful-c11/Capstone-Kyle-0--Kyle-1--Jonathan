@@ -131,7 +131,7 @@ const renderWeather = function(state, element) {
   const daily = state.dailyForcast;
   console.log(daily.weather.icon);
   element.html(`<p>City: ${daily.cityName}</p>
-          <p>Country: ${daily.sys.country}</p>
+          <p class="country">Country: ${daily.sys.country}</p>
           <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
           <p>Temp: ${Math.floor(KtoF(daily.main.temp))} Farenheit</p>
           <p>Pressure: ${daily.main.pressure}</p>
