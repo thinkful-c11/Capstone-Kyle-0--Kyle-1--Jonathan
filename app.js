@@ -11,7 +11,7 @@ const appState = {
   marker: [],
   markerLocation: {
     lat: null,
-    long: null
+    lng: null
   },
   dailyForcast: {
     weather: {
@@ -96,7 +96,7 @@ function setMarkerLatLng(data,state){
 
 //make a marker every time u click
 function makeMarker(state) {
-  console.log("Is zip causing this?");
+  console.log(state.markerLocation);
   state.marker.push(new google.maps.Marker({
     position: state.markerLocation,
     map: state.map,
@@ -182,7 +182,7 @@ const addWeatherToState = function(state, response) {
 
     if(response.coord) {
       state.markerLocation.lat = response.coord.lat;
-      state.markerLocation.long = response.coord.lon;
+      state.markerLocation.lng = response.coord.lon;
       console.log(state);
     }
     renderWeather(state, $('.weather-information'));
