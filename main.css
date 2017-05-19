@@ -49,12 +49,25 @@ html, body {
 .zip-code-submit {
     background-color: rgb(133, 179, 252);
 }
+.country {
+  margin-bottom: 0;
+}
 
+.description {
+  position: relative;
+  margin-top: 0;
+}
+img {
+  /*position: absolute;*/
+  bottom: 0;
+  height: 30px;
+  width: 30px;
+}
 @media only screen and (max-width: 480px) {
     html, body {
         width: 100%;
     }
-    
+
     #map{
         height: 60%;
         width: 100%;
