@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" type="text/css" />
-
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
 </head>
 <body>
     <div id="map">
@@ -13,12 +13,28 @@
     </div>
 
     <div class="information">
-        <h1 class="info-title">
-            Point and Click Weatherwoman
-        </h1>
-        <button class="forecast-button">Current</button>
-        <button class="forecast-button">3 Hour</button>
-        <button class="forecast-button">Daily</button>
+        <div class="button-container">
+            <button class="forecast-button">Current</button>
+            <button class="forecast-button">Tommorrow</button>
+            <button class="forecast-button">Day-After</button>
+        </div>
+        <div class="landing-page">
+            <h1 class="info-title">
+                Point and Click Weatherwoman
+            </h1>
+        </div>
+        <p class="welcome">
+            Click on any location to the explore world's weather.
+            To see weather for your area, click <a id="show-local-weather" href="google.com">here!</a>
+            You can also search for weather by entering a zip code below.
+        </p>
+
+        <form id="zip-code-search">
+
+            <input type="search" name="zip-code-search" placeholder="Zipcode" class="zip-code-submit">
+        </form>
+        
+
         
         <div class="weather-information">
             

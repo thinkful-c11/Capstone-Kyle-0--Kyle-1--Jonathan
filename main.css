@@ -1,28 +1,53 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'PT Sans', sans-serif;
+}
+
 #map {
   height: 100%;
   width:75%;
 }
 
-/* Optional: Makes the sample page fill the window. */
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.info-title{
-    font-size:20px;
+.info-title {
+    font-size: 25px;
     text-align: center;
+    letter-spacing: 1px;
 }
-/*mobile first*/
-.information{
-    display:inline-block;
-    position:fixed;
-    top:0;
-    right:0;
-    width:25%;
-    height:100%;
+
+.information {
+    display: inline-block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 25%;
+    height: 100%;
+    background-color: #85b3fc;
+}
+
+.button-container {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    margin: 0;
+}
+
+.forecast-button  {
+    width: 33.33%;
+    height: 100%;
+    display: block;
+    float: left;
+    font-size: 30px;
+}
+
+.welcome {
+    text-align: center;
+    font-size: 18px;
+}
+
+.zip-code-submit {
+    background-color: rgb(133, 179, 252);
 }
 
 @media only screen and (max-width: 480px) {
@@ -31,14 +56,15 @@ html, body {
     }
     
     #map{
-        height:60%;
-        width:100%;
+        height: 60%;
+        width: 100%;
     }
+    
     .information{
         display: block;
         position: relative;
         bottom: 0;
-        height:25%;
+        height: 25%;
         width: 100%;
     }
 }
