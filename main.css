@@ -16,7 +16,7 @@ html, body {
     text-align: center;
 }
 /*mobile first*/
-.information{
+.information {
     display:inline-block;
     position:fixed;
     top:0;
@@ -32,12 +32,14 @@ html, body {
   position: relative;
   margin-top: 0;
 }
+
 img {
   /*position: absolute;*/
   bottom: 0;
   height: 30px;
   width: 30px;
 }
+
 @media only screen and (max-width: 480px) {
     html, body {
         width: 100%;

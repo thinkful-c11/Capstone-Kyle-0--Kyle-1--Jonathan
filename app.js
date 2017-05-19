@@ -129,7 +129,6 @@ function queryOpenWeather(state) {
 
 const renderWeather = function(state, element) {
   const daily = state.dailyForcast;
-  console.log(daily.weather.icon);
   element.html(`<p>City: ${daily.cityName}</p>
           <p class="country">Country: ${daily.sys.country}</p>
           <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
@@ -149,6 +148,7 @@ const renderWeather = function(state, element) {
 
 //openweather
 const addWeatherToState = function(state, response) {
+  console.log(response);
   const daily = state.dailyForcast;
   if (response) {
     daily.weather.main = response.weather[0].main;
