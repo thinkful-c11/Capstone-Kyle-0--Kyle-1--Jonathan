@@ -17,6 +17,7 @@ const appState = {
     weather: {
       main: null,
       description: null,
+      icon: null,
     },
     main: {
       temp: null,
@@ -48,7 +49,7 @@ function KtoF(temp) {
 function windDirection(deg){
   let direction = "North";
   switch(deg){
-    case 0: 
+    case 0:
       direction = "North";
       break;
     case 90:
@@ -128,10 +129,10 @@ function queryOpenWeather(state) {
 
 const renderWeather = function(state, element) {
   const daily = state.dailyForcast;
+  console.log(daily.weather.icon);
   element.html(`<p>City: ${daily.cityName}</p>
           <p>Country: ${daily.sys.country}</p>
-          <p>Main: ${daily.weather.main}</p>
-          <p>Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)}</p>
+          <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
           <p>Temp: ${Math.floor(KtoF(daily.main.temp))} Farenheit</p>
           <p>Pressure: ${daily.main.pressure}</p>
           <p>Humidity: ${daily.main.humidity}%</p>
@@ -152,6 +153,7 @@ const addWeatherToState = function(state, response) {
   if (response) {
     daily.weather.main = response.weather[0].main;
     daily.weather.description = response.weather[0].description;
+    daily.weather.icon = response.weather[0].icon;
 
     daily.main.temp = response.main.temp;
     daily.main.pressure = response.main.pressure;
