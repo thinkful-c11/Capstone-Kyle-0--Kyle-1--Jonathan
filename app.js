@@ -168,10 +168,10 @@ function min(temp,state){
   return state.lowestTemp;
 }
 //adding the low temp and high temp obj to state
-function addLowHighObj(response,state){
+function addLowHighObj(response,state,fun){
   const forecast = state.tommorrowForecast;
-  forecast.list.push(highTemp(getNewDay1(response),state));
-  forecast.list.push(lowTemp(getNewDay1(response),state));
+  forecast.list.push(highTemp(fun,state));
+  forecast.list.push(lowTemp(fun,state));
   return forecast.list;
 }
 //reset highest and lowest temp
@@ -185,6 +185,13 @@ function resetHLList(state){
   forecast.list = [];
   return forecast.list.length;
 }
+function setCountryCity(state,response){
+  state.tommorrowForecast.city.country = response.city.country;
+  state.tommorrowForecast.city.name = response.city.name;
+  state.dayAfterForecast.city.country = response.city.country;
+  state.dayAfterForecast.city.name = response.city.name;
+}
+
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -196,11 +203,15 @@ function queryOpenWeather(state) {
   };
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
-    addWeatherToState(state, response);
+    addDailyWeatherToState(state , response);
   });
   $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
     resetHLTemp(state);
-    addWeatherToState(state.);
+    resetHLList(state);
+    setCountryCity(state,response);
+    addLowHighObj(response,state,getNewDay1(response));
+    console.log(state.tommorrowForecast);
+    //addWeatherToState(state.tommorrowForecast,response);
   });
 }
 
@@ -220,8 +231,8 @@ function queryOpenWeatherZip(state, code) {
 //////////////     Render functions          //////////////////////
 ////////////////////////////////////////////////////////////////////
 
-const renderWeather = function(state, element) {
-
+const renderDailyWeather = function(state, element) {
+  const daily = state.dailyForecast;
   element.html(`<p>City: ${daily.cityName}</p>
           <p class="country">Country: ${daily.sys.country}</p>
           <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
@@ -239,8 +250,8 @@ const renderWeather = function(state, element) {
 ///////////////////////////////////////////////////////////
 
 //openweather current weather
-const addWeatherToState = function(state, response) {
-  const daily = state;
+const addDailyWeatherToState = function(state, response) {
+  const daily = state.dailyForecast;
   if (response) {
     daily.weather.main = response.weather[0].main;
     daily.weather.description = response.weather[0].description;
@@ -264,7 +275,7 @@ const addWeatherToState = function(state, response) {
       state.markerLocation.lng = response.coord.lon;
 
     }
-    renderWeather(state.dailyForecast, $('.weather-information'));
+    renderDailyWeather(state, $('.weather-information'));
   }
 };
 function addForecastWeatherToState(state,response){
@@ -285,7 +296,7 @@ const eventListeners = function(state){
   });
   
   $('#tommorrow').click(function(event) {
-    renderWeather()
+    //renderWeather()
   })
 }
 //////////////////////////////////////////////////////////////
