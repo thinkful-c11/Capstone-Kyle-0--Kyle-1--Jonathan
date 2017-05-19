@@ -35,7 +35,34 @@ const appState = {
     },
     cityName: null,
   },
-  fiveDayForcast: {},
+  fiveDayForcast: {
+    city:{
+      name: null,
+      country: null,
+    },
+    list:[],
+    // list:[{
+    //   main:{
+    //     temp:null,
+    //     temp_min:null,
+    //     temp_max:null,
+    //     humidity:null,
+    //     pressure:null,
+    //   },
+    //   weather:{
+    //     icon:null,
+    //     main:null,
+    //     description:null
+    //   },
+    //   clouds:null,
+    //   wind:{
+    //     speed:null,
+    //     deg:null,
+    //   }
+    // }]
+  },
+  highestTemp:Number.NEGATIVE_INFINITY,
+  lowestTemp:Number.POSITIVE_INFINITY,
   sixteenDayForcast: {},
 };
 
@@ -67,6 +94,18 @@ function windDirection(deg){
       else direction = "NorthWest";
   }
   return direction;
+}
+//Getting tommorrow
+function getNewDay1(response){
+  const d = new Date();
+  const arr = response.list.filter(el=>grabDateFromString(el.dt_txt) ===`${d.getDate() +1}`);
+  return arr;
+}
+//Getting Day After
+function getNewDay2(response){
+  const d = new Date();
+  const arr = response.list.filter(el=>grabDateFromString(el.dt_txt) ===`${d.getDate() +2}`);
+  return arr;
 }
 /////////////////////////////////////////////////////////////////////
 //////////////   State modification functions   //////////////////////
@@ -105,6 +144,61 @@ function makeMarker(state) {
 function clearMarker(state) {
   state.marker.map(el => el.setMap(null));
 }
+
+//date stuff
+function grabDateFromString(str){
+  return str.substring(8,10);
+}
+
+//highest temperature object
+function highTemp(fun,state){
+  const newDayList = fun;
+  const highestTempArr = newDayList.filter(el=>el.main.temp_max === max(el.main.temp_max,state));
+  return highestTempArr[highestTempArr.length -1];
+}
+//lowest temperature object
+function lowTemp(fun,state){
+  const newDayList = fun;
+  const lowestTempArr = newDayList.filter(el=>el.main.temp_min === min(el.main.temp_min,state));
+  return lowestTempArr[lowestTempArr.length -1];
+}
+
+//set the max temperature
+function max(temp,state){
+  if(temp >state.highestTemp){
+    state.highestTemp = temp;
+  }
+  return state.highestTemp;
+}
+
+//set min temperature
+function min(temp,state){
+  if(temp <state.lowestTemp){
+    state.lowestTemp = temp;
+  }
+  return state.lowestTemp;
+}
+//adding the low temp and high temp obj to state
+function addLowHighObj(response,state){
+  const forcast = state.fiveDayForcast;
+  forcast.list.push(highTemp(getNewDay1(response),state));
+  forcast.list.push(lowTemp(getNewDay1(response),state));
+  return forcast.list;
+}
+//reset highest and lowest temp
+function resetHLTemp(state){
+  state.highestTemp=Number.NEGATIVE_INFINITY;
+  state.lowestTemp=Number.POSITIVE_INFINITY;
+}
+//reset list
+function resetHLList(state){
+  const forcast = state.fiveDayForcast;
+  console.log("THE ARRAY LENGTH IS "+forcast.list.length);
+  for(let i=0;i<forcast.list.length;i++){
+    forcast.list.pop();
+  }
+  return forcast.list.length;
+}
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -118,6 +212,15 @@ function queryOpenWeather(state) {
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
 
     addWeatherToState(state, response);
+  });
+    $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+    resetHLTemp(state);
+    console.log(resetHLList(state));
+    console.log("after resetting");
+    console.log(state.fiveDayForcast.list);
+    console.log(addLowHighObj(response,state));
+    console.log("after adding");
+    console.log(state.fiveDayForcast.list);
   });
 }
 
@@ -146,7 +249,7 @@ const renderWeather = function(state, element) {
 ///////////          CALLBACK FUNCTIONS        /////////////
 ///////////////////////////////////////////////////////////
 
-//openweather
+//openweather current weather
 const addWeatherToState = function(state, response) {
   const daily = state.dailyForcast;
   if (response) {
@@ -168,7 +271,9 @@ const addWeatherToState = function(state, response) {
     renderWeather(state, $('.weather-information'));
   }
 };
+function addForecastWeatherToState(state,response){
 
+}
 //Google
 function callbackGoogle(response){
     clearMarker(appState);
