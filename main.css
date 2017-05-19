@@ -45,7 +45,7 @@ html, body {
     text-align: center;
     font-size: 18px;
 }
-<<<<<<< HEAD
+
 /*mobile first*/
 .information {
     display:inline-block;
@@ -54,7 +54,7 @@ html, body {
     right:0;
     width:25%;
     height:100%;
-
+}
 .zip-code-submit {
     background-color: rgb(133, 179, 252);
 }

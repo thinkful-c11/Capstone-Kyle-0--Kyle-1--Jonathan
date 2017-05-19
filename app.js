@@ -88,7 +88,7 @@ function setLatLng(pos, state) {
 }
 //Set Marker Lat and Lng
 function setMarkerLatLng(data,state){
-    const markerLoc = appState.markerLocation;
+    const markerLoc = state.markerLocation;
     markerLoc.lat = data.latLng.lat();
     markerLoc.lng = data.latLng.lng();
     return markerLoc;
@@ -96,6 +96,7 @@ function setMarkerLatLng(data,state){
 
 //make a marker every time u click
 function makeMarker(state) {
+  console.log("Is zip causing this?");
   state.marker.push(new google.maps.Marker({
     position: state.markerLocation,
     map: state.map,
@@ -122,7 +123,18 @@ function queryOpenWeather(state) {
   });
 }
 
+function queryOpenWeatherZip(state, code) {
+  const parameters = {
+    zip: code
+  };
 
+  $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+
+    addWeatherToState(state, response);
+    clearMarker(state);
+    makeMarker(state);
+  });
+}
 /////////////////////////////////////////////////////////////////////
 //////////////     Render functions          //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -167,6 +179,12 @@ const addWeatherToState = function(state, response) {
     daily.sys.country = response.sys.country;
 
     daily.cityName = response.name;
+
+    if(response.coord) {
+      state.markerLocation.lat = response.coord.lat;
+      state.markerLocation.long = response.coord.lon;
+      console.log(state);
+    }
     renderWeather(state, $('.weather-information'));
   }
 };
@@ -178,7 +196,13 @@ function callbackGoogle(response){
     makeMarker(appState);
     queryOpenWeather(appState);
 }
+const eventListeners = function(state){
 
+  $('#zip-code-search').submit(function(event) {
+    event.preventDefault();
+    queryOpenWeatherZip(state, $('.zip-code-submit').val());
+  });
+}
 //////////////////////////////////////////////////////////////
 ///////////          Google Stuff              /////////////
 ///////////////////////////////////////////////////////////
@@ -200,6 +224,7 @@ function initMap() {
 
   //clicking on google maps
   google.maps.event.addDomListener(map, 'click', callbackGoogle);
+  eventListeners(appState);
 
 }
 
