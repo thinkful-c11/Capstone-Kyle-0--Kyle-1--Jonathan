@@ -38,7 +38,7 @@ html, body {
     height: 100%;
     display: block;
     float: left;
-    font-size: 30px;
+    font-size: 28px;
     border: 1px solid;
     background-color: #85b3fc;
 }
@@ -58,15 +58,6 @@ html, body {
     font-size: 18px;
 }
 
-/*mobile first*/
-.information {
-    display:inline-block;
-    position:fixed;
-    top:0;
-    right:0;
-    width:25%;
-    height:100%;
-}
 .zip-code-submit {
     background-color: rgb(133, 179, 252);
     border-width: 0;
@@ -87,15 +78,20 @@ html, body {
   margin-bottom: 0;
 }
 
-.description {
-  position: relative;
-  margin-top: 0;
+.city-name {
+    font-size: 28px;
+    text-align: center;
+}
+
+p {
+    text-align: center;
 }
 
 img {
-  bottom: 0;
-  height: 30px;
-  width: 30px;
+    position: absolute;
+    margin-left: 130px;
+    height: 100px;
+    width: 100px;
 }
 
 @media only screen and (max-width: 480px) {
@@ -107,12 +103,23 @@ img {
         height: 60%;
         width: 100%;
     }
-
+    
     .information{
         display: block;
         position: relative;
         bottom: 0;
-        height: 25%;
+        height: 100%;
         width: 100%;
+    }
+
+    img {
+    position: absolute;
+    margin-left: 80px;
+    height: 100px;
+    width: 100px;
+    }
+
+    .forecast-button {
+        font-size: 23px;
     }
 }

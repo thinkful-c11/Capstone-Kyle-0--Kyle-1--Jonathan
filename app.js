@@ -216,8 +216,8 @@ function setCountryCity(state,response){
 
 function queryOpenWeather(state) {
   const parameters = {
-    lat: state.markerLocation.lat,
-    lon: state.markerLocation.lng,
+    lat: state.markerLocation.lat || state.yourLoc.lat,
+    lon: state.markerLocation.lng || state.yourLoc.lng,
   };
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
@@ -270,7 +270,8 @@ function queryOpenWeatherZip(state, code) {
 const renderDailyWeather = function(state, element) {
   const daily = state.dailyForecast;
   element.html(`<p class="city-name">${daily.cityName}, ${daily.sys.country}</p>
-          <p class="description">${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
+          <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"/>
+          <p class="description">${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)}</p>
           <p>${Math.floor(KtoF(daily.main.temp))} &deg;F</p>
           <p>${daily.main.pressure} mbar</p>
           <p>${daily.main.humidity}% humidity</p>
@@ -281,7 +282,8 @@ const renderDailyWeather = function(state, element) {
 const renderForecast = function(state, element) {
   const weather = state.list[0];
   element.html(`<p class="city-name">${state.city.name}, ${state.city.country}</p>
-          <p class="description">${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)} <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"</p>
+          <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"/>
+          <p>${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)}</p>
           <p>${Math.floor(KtoF(weather.main.temp))} &deg;F</p>
           <p>${weather.main.pressure} mbar</p>
           <p>${weather.main.humidity}% humidity</p>
@@ -325,11 +327,14 @@ const addDailyWeatherToState = function(state, response) {
 
 //Google
 function callbackGoogle(response){
-    clearMarker(appState);
-    setMarkerLatLng(response,appState);
-    makeMarker(appState);
+    if (response !== null) { // if not initial query
+      clearMarker(appState);
+      setMarkerLatLng(response, appState);
+      makeMarker(appState);
+    }
     queryOpenWeather(appState);
 }
+
 const eventListeners = function(state){
 
   const weatherInformation = $('.weather-information');
@@ -394,6 +399,7 @@ function getYourCoords(infoWindow, state) {
       //modification to state
       setLatLng(pos, state);
 
+      callbackGoogle(null)
       infoWindow.setPosition(pos);
       infoWindow.setContent('Location found.');
       infoWindow.open(state.map);
