@@ -44,6 +44,30 @@ function KtoF(temp) {
   return (9/5*(temp - 273) + 32);
 }
 
+//Display the direction wind is blowing
+function windDirection(deg){
+  let direction = "North";
+  switch(deg){
+    case 0: 
+      direction = "North";
+      break;
+    case 90:
+      direction = "East";
+      break;
+    case 180:
+      direction = "South";
+      break;
+    case 270:
+      direction = "West";
+      break;
+    default:
+      if(deg>0 && deg < 90) direction="NorthEast";
+      else if(deg>90 && deg<180) direction = "SouthEast";
+      else if(deg>180 && deg<270) direction = "SouthWest";
+      else direction = "NorthWest";
+  }
+  return direction;
+}
 /////////////////////////////////////////////////////////////////////
 //////////////   State modification functions   //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -111,10 +135,11 @@ const renderWeather = function(state, element) {
           <p>Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)}</p>
           <p>Temp: ${Math.floor(KtoF(daily.main.temp)*100)/100} Farenheit</p>
           <p>Pressure: ${daily.main.pressure}</p>
-          <p>Humidity: ${daily.main.humidity}</p>
+          <p>Humidity: ${daily.main.humidity}%</p>
           <p>Wind Speed: ${daily.wind.speed}</p>
-          <p>Wind Degrees: ${daily.wind.degrees}</p>
-          <p>Clouds: ${daily.clouds.all}</p>`);
+          <p>Wind Degrees: ${daily.wind.degrees} ${windDirection(daily.wind.degrees)}</p>
+          <p>It will blow at ${daily.wind.speed} meter/sec in ${windDirection(daily.wind.degrees)} direction</p>
+          <p>Clouds: ${daily.clouds.all}% cloudy</p>`);
 }
 
 
