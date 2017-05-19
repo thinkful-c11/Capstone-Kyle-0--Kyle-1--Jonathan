@@ -13,7 +13,7 @@ const appState = {
     lat: null,
     lng: null
   },
-  dailyForcast: {
+  dailyForecast: {
     weather: {
       main: null,
       description: null,
@@ -36,35 +36,22 @@ const appState = {
     },
     cityName: null,
   },
-  fiveDayForcast: {
+  tommorrowForecast: {
     city:{
       name: null,
       country: null,
     },
     list:[],
-    // list:[{
-    //   main:{
-    //     temp:null,
-    //     temp_min:null,
-    //     temp_max:null,
-    //     humidity:null,
-    //     pressure:null,
-    //   },
-    //   weather:{
-    //     icon:null,
-    //     main:null,
-    //     description:null
-    //   },
-    //   clouds:null,
-    //   wind:{
-    //     speed:null,
-    //     deg:null,
-    //   }
-    // }]
   },
   highestTemp:Number.NEGATIVE_INFINITY,
   lowestTemp:Number.POSITIVE_INFINITY,
-  sixteenDayForcast: {},
+  dayAfterForecast: {
+    city:{
+      name: null,
+      country: null,
+    },
+    list:[],
+  },
 };
 
 //Convert Kelvin to Farenheit
@@ -182,10 +169,10 @@ function min(temp,state){
 }
 //adding the low temp and high temp obj to state
 function addLowHighObj(response,state){
-  const forcast = state.fiveDayForcast;
-  forcast.list.push(highTemp(getNewDay1(response),state));
-  forcast.list.push(lowTemp(getNewDay1(response),state));
-  return forcast.list;
+  const forecast = state.tommorrowForecast;
+  forecast.list.push(highTemp(getNewDay1(response),state));
+  forecast.list.push(lowTemp(getNewDay1(response),state));
+  return forecast.list;
 }
 //reset highest and lowest temp
 function resetHLTemp(state){
@@ -194,9 +181,9 @@ function resetHLTemp(state){
 }
 //reset list
 function resetHLList(state){
-  const forcast = state.fiveDayForcast;
-  forcast.list = [];
-  return forcast.list.length;
+  const forecast = state.tommorrowForecast;
+  forecast.list = [];
+  return forecast.list.length;
 }
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
@@ -209,11 +196,11 @@ function queryOpenWeather(state) {
   };
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
-
     addWeatherToState(state, response);
   });
-    $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+  $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
     resetHLTemp(state);
+    addWeatherToState(state.);
   });
 }
 
@@ -234,7 +221,7 @@ function queryOpenWeatherZip(state, code) {
 ////////////////////////////////////////////////////////////////////
 
 const renderWeather = function(state, element) {
-  const daily = state.dailyForcast;
+
   element.html(`<p>City: ${daily.cityName}</p>
           <p class="country">Country: ${daily.sys.country}</p>
           <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
@@ -247,14 +234,13 @@ const renderWeather = function(state, element) {
           <p>Clouds: ${daily.clouds.all}% cloudy</p>`);
 };
 
-
 //////////////////////////////////////////////////////////////
 ///////////          CALLBACK FUNCTIONS        /////////////
 ///////////////////////////////////////////////////////////
 
 //openweather current weather
 const addWeatherToState = function(state, response) {
-  const daily = state.dailyForcast;
+  const daily = state;
   if (response) {
     daily.weather.main = response.weather[0].main;
     daily.weather.description = response.weather[0].description;
@@ -278,7 +264,7 @@ const addWeatherToState = function(state, response) {
       state.markerLocation.lng = response.coord.lon;
 
     }
-    renderWeather(state, $('.weather-information'));
+    renderWeather(state.dailyForecast, $('.weather-information'));
   }
 };
 function addForecastWeatherToState(state,response){
@@ -297,6 +283,10 @@ const eventListeners = function(state){
     event.preventDefault();
     queryOpenWeatherZip(state, $('.zip-code-submit').val());
   });
+  
+  $('#tommorrow').click(function(event) {
+    renderWeather()
+  })
 }
 //////////////////////////////////////////////////////////////
 ///////////          Google Stuff              /////////////

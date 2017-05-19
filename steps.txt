@@ -15,14 +15,7 @@ display all weather informaion on the right div -DONE
 //////////////////////
 
 Making the data more useful to humans
-    - fix undefined cityName -DONE
-    - general styling -DONE
-    - fharenheit temp -DONE
-    - add images to weather conditions http://openweathermap.org/weather-conditions -DONE
 
-add search for zip code
-    -it should display a marker
-    -focus on that location
 
 add 5 day forcast
 
