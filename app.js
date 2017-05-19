@@ -6,6 +6,7 @@
 ///////////////////////////        appState + helper functions ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 const appState = {
+  dayOfWeek: null,
   yourLoc: {},
   map: null,
   marker: [],
@@ -191,6 +192,24 @@ function setCountryCity(state,response){
   state.dayAfterForecast.city.name = response.city.name;
 }
 
+// TO FIX
+// function setDaysOfWeek(state) {
+//   const today = new Date().getDay();
+//   const days = [
+//     "Monday",
+//     "Tuesday",
+//     "Wednesday",
+//     "Thursday",
+//     "Friday",
+//     "Saturday",
+//     "Sunday",
+//     "Monday",
+//     "Tuesday"];
+//   $('#current').text(days[today]);
+//   $('#tommorrow').text(days[today + 1]);
+//   $('#day-after').text(days[today + 2]);
+// }
+
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
 ////////////////////////////////////////////////////////////////////
@@ -210,6 +229,7 @@ function queryOpenWeather(state) {
     resetHLList(state.dayAfterForecast);
     setCountryCity(state,response);
     addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
+    resetHLTemp(state);
     addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
   });
 }
@@ -219,52 +239,54 @@ function queryOpenWeatherZip(state, code) {
     zip: code
   };
 
-  $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
-    addDailyWeatherToState(state, response);
+  $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters)
+            .done(response => {
+                      addDailyWeatherToState(state, response);
 
-    clearMarker(state);
-    makeMarker(state);
-  });
-  $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
-    resetHLTemp(state);
-    resetHLList(state.tommorrowForecast);
-    resetHLList(state.dayAfterForecast);
-    setCountryCity(state,response);
-    addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
-    addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
-  });
+                      clearMarker(state);
+                      makeMarker(state);
+            })
+
+  $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters)
+            .done(response => {
+              resetHLTemp(state);
+              resetHLList(state.tommorrowForecast);
+              resetHLList(state.dayAfterForecast);
+              setCountryCity(state,response);
+              addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
+              resetHLTemp(state);
+              addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
+            })
+            .fail(error => {
+              alert("That zip code does not exist.")
+            })
+      
 }
+
 /////////////////////////////////////////////////////////////////////
 //////////////     Render functions          //////////////////////
 ////////////////////////////////////////////////////////////////////
 
 const renderDailyWeather = function(state, element) {
   const daily = state.dailyForecast;
-  element.html(`<p>City: ${daily.cityName}</p>
-          <p class="country">Country: ${daily.sys.country}</p>
-          <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
-          <p>Temp: ${Math.floor(KtoF(daily.main.temp))} Farenheit</p>
-          <p>Pressure: ${daily.main.pressure}</p>
-          <p>Humidity: ${daily.main.humidity}%</p>
-          <p>Wind Speed: ${daily.wind.speed}</p>
-          <p>Wind Degrees: ${daily.wind.degrees} ${windDirection(daily.wind.degrees)}</p>
-          <p>It will blow at ${daily.wind.speed} meter/sec in ${windDirection(daily.wind.degrees)} direction</p>
-          <p>Clouds: ${daily.clouds.all}% cloudy</p>`);
+  element.html(`<p class="city-name">${daily.cityName}, ${daily.sys.country}</p>
+          <p class="description">${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
+          <p>${Math.floor(KtoF(daily.main.temp))} &deg;F</p>
+          <p>${daily.main.pressure} mbar</p>
+          <p>${daily.main.humidity}% humidity</p>
+          <p>Wind is blowing at ${daily.wind.speed} meter/sec to the ${windDirection(daily.wind.degrees)}.</p>
+          <p>${daily.clouds.all}% cloudy</p>`);
 };
 
 const renderForecast = function(state, element) {
-  console.log(state);
   const weather = state.list[0];
-  element.html(`<p>City: ${state.city.name}</p>
-          <p class="country">Country: ${state.city.country}</p>
-          <p class="description">Description: ${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)} <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"</p>
-          <p>Temp: ${Math.floor(KtoF(weather.main.temp))} Farenheit</p>
-          <p>Pressure: ${weather.main.pressure}</p>
-          <p>Humidity: ${weather.main.humidity}%</p>
-          <p>Wind Speed: ${weather.wind.speed}</p>
-          <p>Wind Degrees: ${weather.wind.deg} ${windDirection(weather.wind.deg)}</p>
-          <p>It will blow at ${weather.wind.speed} meter/sec in ${windDirection(weather.wind.degrees)} direction</p>
-          <p>Clouds: ${weather.clouds.all}% cloudy</p>`);
+  element.html(`<p class="city-name">${state.city.name}, ${state.city.country}</p>
+          <p class="description">${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)} <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"</p>
+          <p>${Math.floor(KtoF(weather.main.temp))} &deg;F</p>
+          <p>${weather.main.pressure} mbar</p>
+          <p>${weather.main.humidity}% humidity</p>
+          <p>Wind is blowing ${weather.wind.speed} meter/sec to the ${windDirection(weather.wind.degrees)}.</p>
+          <p>${weather.clouds.all}% cloudy</p>`);
 }
 
 //////////////////////////////////////////////////////////////
@@ -326,16 +348,15 @@ const eventListeners = function(state){
   });
 
   $('#day-after').click(function(event) {
-    try { // no data for day after
-      renderForecast(state.dayAfterForecast, weatherInformation);
-    } catch (e) {
-      console.log("No data for that location at that time.")
-    }
-    finally {
-      renderForecast(state.tommorrowForecast, weatherInformation);
-    }
+    renderForecast(state.dayAfterForecast, weatherInformation);
   })
 }
+
+// TO FIX
+// $().ready(function() {
+//   setDaysOfWeek();
+// })
+
 //////////////////////////////////////////////////////////////
 ///////////          Google Stuff              /////////////
 ///////////////////////////////////////////////////////////
