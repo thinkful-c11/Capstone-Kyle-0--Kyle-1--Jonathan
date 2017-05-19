@@ -225,6 +225,14 @@ function queryOpenWeatherZip(state, code) {
     clearMarker(state);
     makeMarker(state);
   });
+  $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+    resetHLTemp(state);
+    resetHLList(state.tommorrowForecast);
+    resetHLList(state.dayAfterForecast);
+    setCountryCity(state,response);
+    addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
+    addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
+  });
 }
 /////////////////////////////////////////////////////////////////////
 //////////////     Render functions          //////////////////////
@@ -249,7 +257,7 @@ const renderForecast = function(state, element) {
   const weather = state.list[0];
   element.html(`<p>City: ${state.city.name}</p>
           <p class="country">Country: ${state.city.country}</p>
-          <p class="description">Description: ${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)} <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"</p>           
+          <p class="description">Description: ${weather.weather[0].description.charAt(0).toUpperCase() + weather.weather[0].description.slice(1)} <img src="http://openweathermap.org/img/w/${weather.weather[0].icon}.png"</p>
           <p>Temp: ${Math.floor(KtoF(weather.main.temp))} Farenheit</p>
           <p>Pressure: ${weather.main.pressure}</p>
           <p>Humidity: ${weather.main.humidity}%</p>
@@ -312,7 +320,7 @@ const eventListeners = function(state){
   $('#current').click(function(event){
     renderDailyWeather(state, weatherInformation);
   })
-  
+
   $('#tommorrow').click(function(event) {
     renderForecast(state.tommorrowForecast, weatherInformation);
   });
