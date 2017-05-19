@@ -318,7 +318,14 @@ const eventListeners = function(state){
   });
 
   $('#day-after').click(function(event) {
-    renderForecast(state.dayAfterForecast, weatherInformation);
+    try { // no data for day after
+      renderForecast(state.dayAfterForecast, weatherInformation);
+    } catch (e) {
+      console.log("No data for that location at that time.")
+    }
+    finally {
+      renderForecast(state.tommorrowForecast, weatherInformation);
+    }
   })
 }
 //////////////////////////////////////////////////////////////
