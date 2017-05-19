@@ -1,22 +1,65 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'PT Sans', sans-serif;
+}
+
 #map {
   height: 100%;
   width:75%;
 }
 
-/* Optional: Makes the sample page fill the window. */
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.info-title{
-    font-size:20px;
+.info-title {
+    font-size: 25px;
     text-align: center;
+    letter-spacing: 1px;
 }
+
+.information {
+    display: inline-block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 25%;
+    height: 100%;
+    background-color: #85b3fc;
+}
+
+.button-container {
+    width: 100%;
+    height: 50px;
+    padding: 0;
+    margin: 0;
+}
+
+.forecast-button  {
+    width: 33.33%;
+    height: 100%;
+    display: block;
+    float: left;
+    font-size: 30px;
+    border: 1px solid;
+    background-color: #85b3fc;
+}
+
+.forecast-button-selected {
+    width: 33.33%;
+    height: 100%;
+    display: block;
+    float: left;
+    font-size: 30px;
+    border: 1px solid;
+    background-color: #f49542;
+}
+
+.welcome {
+    text-align: center;
+    font-size: 18px;
+}
+
 /*mobile first*/
-.information{
+.information {
     display:inline-block;
     position:fixed;
     top:0;
@@ -24,21 +67,52 @@ html, body {
     width:25%;
     height:100%;
 }
+.zip-code-submit {
+    background-color: rgb(133, 179, 252);
+    border-width: 0;
+    color: black;
+    outline: none;
+    margin-left: 43%;
+}
+
+.style-bar {
+    margin-top: 2px;
+    height: 2px;
+    width: 157px;
+    background-color: black;
+    margin-left: 32%;
+}
+
+.country {
+  margin-bottom: 0;
+}
+
+.description {
+  position: relative;
+  margin-top: 0;
+}
+
+img {
+  bottom: 0;
+  height: 30px;
+  width: 30px;
+}
 
 @media only screen and (max-width: 480px) {
     html, body {
         width: 100%;
     }
-    
+
     #map{
-        height:60%;
-        width:100%;
+        height: 60%;
+        width: 100%;
     }
+
     .information{
         display: block;
         position: relative;
         bottom: 0;
-        height:25%;
+        height: 25%;
         width: 100%;
     }
 }
