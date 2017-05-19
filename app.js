@@ -135,7 +135,7 @@ function setMarkerLatLng(data,state){
 
 //make a marker every time u click
 function makeMarker(state) {
-  console.log(state.markerLocation);
+
   state.marker.push(new google.maps.Marker({
     position: state.markerLocation,
     map: state.map,
@@ -195,10 +195,7 @@ function resetHLTemp(state){
 //reset list
 function resetHLList(state){
   const forcast = state.fiveDayForcast;
-  console.log("THE ARRAY LENGTH IS "+forcast.list.length);
-  for(let i=0;i<forcast.list.length;i++){
-    forcast.list.pop();
-  }
+  forcast.list = [];
   return forcast.list.length;
 }
 /////////////////////////////////////////////////////////////////////
@@ -217,12 +214,6 @@ function queryOpenWeather(state) {
   });
     $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
     resetHLTemp(state);
-    console.log(resetHLList(state));
-    console.log("after resetting");
-    console.log(state.fiveDayForcast.list);
-    console.log(addLowHighObj(response,state));
-    console.log("after adding");
-    console.log(state.fiveDayForcast.list);
   });
 }
 
@@ -263,7 +254,6 @@ const renderWeather = function(state, element) {
 
 //openweather current weather
 const addWeatherToState = function(state, response) {
-  console.log(response);
   const daily = state.dailyForcast;
   if (response) {
     daily.weather.main = response.weather[0].main;
@@ -286,7 +276,7 @@ const addWeatherToState = function(state, response) {
     if(response.coord) {
       state.markerLocation.lat = response.coord.lat;
       state.markerLocation.lng = response.coord.lon;
-      console.log(state);
+
     }
     renderWeather(state, $('.weather-information'));
   }
