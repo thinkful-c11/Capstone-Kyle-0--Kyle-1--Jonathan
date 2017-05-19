@@ -1,24 +1,26 @@
-Display the map covering 75% of the page, and have a blank div on the right future use.
+Display the map covering 75% of the page, and have a blank div on the right future use.   -DONE
 
-on page load, map points to current location // navigator.geolocation.getCurrentPosition((res) => {console.log(res) })
+on page load, map points to current location // navigator.geolocation.getCurrentPosition((res) => {console.log(res) })  -DONE
 
-clicking the map console.log lat and lng
+clicking the map console.log lat and lng -DONE
 
-clicking the map add marker to that location
+clicking the map add marker to that location -DONE
 
-clicking the map console.log current weather
+clicking the map console.log current weather -DONE
 
-display current weather info on the right div
+display current weather info on the right div -DONE
 
-display all weather informaion on the right div
+display all weather informaion on the right div -DONE
 
 //////////////////////
 
 Making the data more useful to humans
-    - general styling
-    - add images to weather conditions http://openweathermap.org/weather-conditions
+    - fix undefined cityName -DONE
+    - general styling -DONE
+    - fharenheit temp -DONE
+    - add images to weather conditions http://openweathermap.org/weather-conditions -DONE
 
-add search for zip code 
+add search for zip code
     -it should display a marker
     -focus on that location
 
@@ -27,4 +29,3 @@ add 5 day forcast
 add 16 day forcast
 
 refactor
-

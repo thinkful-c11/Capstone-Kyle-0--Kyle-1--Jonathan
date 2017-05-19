@@ -11,7 +11,7 @@ const appState = {
   marker: [],
   markerLocation: {
     lat: null,
-    long: null
+    lng: null
   },
   dailyForcast: {
     weather: {
@@ -88,7 +88,7 @@ function setLatLng(pos, state) {
 }
 //Set Marker Lat and Lng
 function setMarkerLatLng(data,state){
-    const markerLoc = appState.markerLocation;
+    const markerLoc = state.markerLocation;
     markerLoc.lat = data.latLng.lat();
     markerLoc.lng = data.latLng.lng();
     return markerLoc;
@@ -96,6 +96,7 @@ function setMarkerLatLng(data,state){
 
 //make a marker every time u click
 function makeMarker(state) {
+  console.log(state.markerLocation);
   state.marker.push(new google.maps.Marker({
     position: state.markerLocation,
     map: state.map,
@@ -122,14 +123,24 @@ function queryOpenWeather(state) {
   });
 }
 
+function queryOpenWeatherZip(state, code) {
+  const parameters = {
+    zip: code
+  };
 
+  $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
+
+    addWeatherToState(state, response);
+    clearMarker(state);
+    makeMarker(state);
+  });
+}
 /////////////////////////////////////////////////////////////////////
 //////////////     Render functions          //////////////////////
 ////////////////////////////////////////////////////////////////////
 
 const renderWeather = function(state, element) {
   const daily = state.dailyForcast;
-  console.log(daily.weather.icon);
   element.html(`<p>City: ${daily.cityName}</p>
           <p class="country">Country: ${daily.sys.country}</p>
           <p class="description">Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)} <img src="http://openweathermap.org/img/w/${daily.weather.icon}.png"</p>
@@ -149,6 +160,7 @@ const renderWeather = function(state, element) {
 
 //openweather
 const addWeatherToState = function(state, response) {
+  console.log(response);
   const daily = state.dailyForcast;
   if (response) {
     daily.weather.main = response.weather[0].main;
@@ -167,6 +179,12 @@ const addWeatherToState = function(state, response) {
     daily.sys.country = response.sys.country;
 
     daily.cityName = response.name;
+
+    if(response.coord) {
+      state.markerLocation.lat = response.coord.lat;
+      state.markerLocation.lng = response.coord.lon;
+      console.log(state);
+    }
     renderWeather(state, $('.weather-information'));
   }
 };
@@ -178,7 +196,13 @@ function callbackGoogle(response){
     makeMarker(appState);
     queryOpenWeather(appState);
 }
+const eventListeners = function(state){
 
+  $('#zip-code-search').submit(function(event) {
+    event.preventDefault();
+    queryOpenWeatherZip(state, $('.zip-code-submit').val());
+  });
+}
 //////////////////////////////////////////////////////////////
 ///////////          Google Stuff              /////////////
 ///////////////////////////////////////////////////////////
@@ -200,6 +224,7 @@ function initMap() {
 
   //clicking on google maps
   google.maps.event.addDomListener(map, 'click', callbackGoogle);
+  eventListeners(appState);
 
 }
 

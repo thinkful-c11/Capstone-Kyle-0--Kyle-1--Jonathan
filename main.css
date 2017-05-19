@@ -58,6 +58,15 @@ html, body {
     font-size: 18px;
 }
 
+/*mobile first*/
+.information {
+    display:inline-block;
+    position:fixed;
+    top:0;
+    right:0;
+    width:25%;
+    height:100%;
+}
 .zip-code-submit {
     background-color: rgb(133, 179, 252);
     border-width: 0;
@@ -98,7 +107,7 @@ img {
         height: 60%;
         width: 100%;
     }
-    
+
     .information{
         display: block;
         position: relative;
