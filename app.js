@@ -41,7 +41,7 @@ const appState = {
 
 //Convert Kelvin to Farenheit
 function KtoF(temp) {
-  return (9/5*(temp - 273) + 32);
+  return ((9/5*(temp - 273) + 32)*100)/100;
 }
 
 //Display the direction wind is blowing
@@ -98,7 +98,6 @@ function makeMarker(state) {
   state.marker.push(new google.maps.Marker({
     position: state.markerLocation,
     map: state.map,
-    title: 'Hello World!'
   }));
 }
 
@@ -133,14 +132,14 @@ const renderWeather = function(state, element) {
           <p>Country: ${daily.sys.country}</p>
           <p>Main: ${daily.weather.main}</p>
           <p>Description: ${daily.weather.description.charAt(0).toUpperCase() + daily.weather.description.slice(1)}</p>
-          <p>Temp: ${Math.floor(KtoF(daily.main.temp)*100)/100} Farenheit</p>
+          <p>Temp: ${Math.floor(KtoF(daily.main.temp))} Farenheit</p>
           <p>Pressure: ${daily.main.pressure}</p>
           <p>Humidity: ${daily.main.humidity}%</p>
           <p>Wind Speed: ${daily.wind.speed}</p>
           <p>Wind Degrees: ${daily.wind.degrees} ${windDirection(daily.wind.degrees)}</p>
           <p>It will blow at ${daily.wind.speed} meter/sec in ${windDirection(daily.wind.degrees)} direction</p>
           <p>Clouds: ${daily.clouds.all}% cloudy</p>`);
-}
+};
 
 
 //////////////////////////////////////////////////////////////
@@ -150,7 +149,7 @@ const renderWeather = function(state, element) {
 //openweather
 const addWeatherToState = function(state, response) {
   const daily = state.dailyForcast;
-  if (response.weather) {
+  if (response) {
     daily.weather.main = response.weather[0].main;
     daily.weather.description = response.weather[0].description;
 
@@ -168,7 +167,7 @@ const addWeatherToState = function(state, response) {
     daily.cityName = response.name;
     renderWeather(state, $('.weather-information'));
   }
-}
+};
 
 //Google
 function callbackGoogle(response){
@@ -193,7 +192,6 @@ function initMap() {
     center: uluru,
   });
 
-
   setMap(map, appState);
   const infoWindow = new google.maps.InfoWindow;
   getYourCoords(infoWindow, appState);
@@ -202,7 +200,6 @@ function initMap() {
   google.maps.event.addDomListener(map, 'click', callbackGoogle);
 
 }
-
 
 //Get your Coordinates
 function getYourCoords(infoWindow, state) {
