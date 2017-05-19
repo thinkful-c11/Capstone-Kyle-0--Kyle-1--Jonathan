@@ -15,6 +15,7 @@ display all weather informaion on the right div
 //////////////////////
 
 Making the data more useful to humans
+    - fix undefined cityName
     - general styling
     - fharenheit temp
     - add images to weather conditions http://openweathermap.org/weather-conditions
