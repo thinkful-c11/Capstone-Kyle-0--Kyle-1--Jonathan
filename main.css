@@ -39,6 +39,18 @@ html, body {
     display: block;
     float: left;
     font-size: 30px;
+    border: 1px solid;
+    background-color: #85b3fc;
+}
+
+.forecast-button-selected {
+    width: 33.33%;
+    height: 100%;
+    display: block;
+    float: left;
+    font-size: 30px;
+    border: 1px solid;
+    background-color: #f49542;
 }
 
 .welcome {
@@ -57,7 +69,20 @@ html, body {
 }
 .zip-code-submit {
     background-color: rgb(133, 179, 252);
+    border-width: 0;
+    color: black;
+    outline: none;
+    margin-left: 43%;
 }
+
+.style-bar {
+    margin-top: 2px;
+    height: 2px;
+    width: 157px;
+    background-color: black;
+    margin-left: 32%;
+}
+
 .country {
   margin-bottom: 0;
 }
@@ -68,7 +93,6 @@ html, body {
 }
 
 img {
-  /*position: absolute;*/
   bottom: 0;
   height: 30px;
   width: 30px;
