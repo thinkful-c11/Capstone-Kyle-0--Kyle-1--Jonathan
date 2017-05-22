@@ -2,6 +2,10 @@
   global $
   global navigator
 */
+
+//Use global form of "use strict"
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////        appState + helper functions ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,26 +65,27 @@ function KtoF(temp) {
 }
 
 //Display the direction wind is blowing
+//Eslint prefers when the quotes are ' '.
 function windDirection(deg){
-  let direction = "North";
+  let direction = 'North';
   switch(deg){
     case 0:
-      direction = "North";
+      direction = 'North';
       break;
     case 90:
-      direction = "East";
+      direction = 'East';
       break;
     case 180:
-      direction = "South";
+      direction = 'South';
       break;
     case 270:
-      direction = "West";
+      direction = 'West';
       break;
     default:
-      if(deg>0 && deg < 90) direction="NorthEast";
-      else if(deg>90 && deg<180) direction = "SouthEast";
-      else if(deg>180 && deg<270) direction = "SouthWest";
-      else direction = "NorthWest";
+      if(deg>0 && deg < 90) direction='NorthEast';
+      else if(deg>90 && deg<180) direction = 'SouthEast';
+      else if(deg>180 && deg<270) direction = 'SouthWest';
+      else direction = 'NorthWest';
   }
   return direction;
 }
@@ -115,10 +120,10 @@ function setLatLng(pos, state) {
 }
 //Set Marker Lat and Lng
 function setMarkerLatLng(data,state){
-    const markerLoc = state.markerLocation;
-    markerLoc.lat = data.latLng.lat();
-    markerLoc.lng = data.latLng.lng();
-    return markerLoc;
+  const markerLoc = state.markerLocation;
+  markerLoc.lat = data.latLng.lat();
+  markerLoc.lng = data.latLng.lng();
+  return markerLoc;
 }
 
 //make a marker every time u click
@@ -245,7 +250,7 @@ function queryOpenWeatherZip(state, code) {
 
                       clearMarker(state);
                       makeMarker(state);
-            })
+            });
 
   $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters)
             .done(response => {
@@ -258,8 +263,8 @@ function queryOpenWeatherZip(state, code) {
               addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
             })
             .fail(error => {
-              alert("That zip code does not exist.")
-            })
+              alert('That zip code does not exist.');
+            });
       
 }
 
@@ -289,7 +294,7 @@ const renderForecast = function(state, element) {
           <p>${weather.main.humidity}% humidity</p>
           <p>Wind is blowing ${weather.wind.speed} meter/sec to the ${windDirection(weather.wind.degrees)}.</p>
           <p>${weather.clouds.all}% cloudy</p>`);
-}
+};
 
 //////////////////////////////////////////////////////////////
 ///////////          CALLBACK FUNCTIONS        /////////////
@@ -327,12 +332,12 @@ const addDailyWeatherToState = function(state, response) {
 
 //Google
 function callbackGoogle(response){
-    if (response !== null) { // if not initial query
+  if (response !== null) { // if not initial query
       clearMarker(appState);
       setMarkerLatLng(response, appState);
       makeMarker(appState);
     }
-    queryOpenWeather(appState);
+  queryOpenWeather(appState);
 }
 
 const eventListeners = function(state){
@@ -346,7 +351,7 @@ const eventListeners = function(state){
 
   $('#current').click(function(event){
     renderDailyWeather(state, weatherInformation);
-  })
+  });
 
   $('#tommorrow').click(function(event) {
     renderForecast(state.tommorrowForecast, weatherInformation);
@@ -354,8 +359,8 @@ const eventListeners = function(state){
 
   $('#day-after').click(function(event) {
     renderForecast(state.dayAfterForecast, weatherInformation);
-  })
-}
+  });
+};
 
 // TO FIX
 // $().ready(function() {
@@ -399,7 +404,7 @@ function getYourCoords(infoWindow, state) {
       //modification to state
       setLatLng(pos, state);
 
-      callbackGoogle(null)
+      callbackGoogle(null);
       infoWindow.setPosition(pos);
       infoWindow.setContent('Location found.');
       infoWindow.open(state.map);
