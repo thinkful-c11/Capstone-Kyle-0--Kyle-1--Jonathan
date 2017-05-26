@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" type="text/css" />
-    <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" type="text/css" />
+  <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
 </head>
+
 <body>
-    <div id="map">
+  <div id="map">
 
+  </div>
+
+  <div class="information">
+    <div class="button-container">
+      <button class="forecast-button" id="current">Current</button>
+      <button class="forecast-button" id="tommorrow">Tommorrow</button>
+      <button class="forecast-button" id="day-after">Day After</button>
     </div>
-
-    <div class="information">
-        <div class="button-container">
-            <button class="forecast-button" id="current">Current</button>
-            <button class="forecast-button" id="tommorrow">Tommorrow</button>
-            <button class="forecast-button" id="day-after">Day After</button>
-        </div>
-        <div class="landing-page">
-            <h1 class="info-title">
+    <div class="landing-page">
+      <h1 class="info-title">
                 Point and Click Weatherwoman
             </h1>
-        </div>
-        <p class="welcome">
-            Click on any location to the explore world's weather!
-            You can also search for weather by entering a zip code below.
-        </p>
-
-        <form id="zip-code-search">
-            <input type="search" name="zip-code-search" placeholder="Zipcode" class="zip-code-submit">
-        </form>
-
-        <div class="style-bar"></div>
-
-        <div class="weather-information">
-            
-        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuNzKBvsQPptdGctcDVnOB3JzondJbwHA&callback=initMap"></script>
+    <p class="welcome">
+      Click on any location to the explore world's weather! You can also search for weather by entering a zip code below.
+    </p>
+
+    <form id="zip-code-search">
+      <input type="search" name="zip-code-search" placeholder="Zipcode" class="zip-code-submit">
+    </form>
+
+    <div class="style-bar"></div>
+
+    <div class="weather-information">
+
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="app.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuNzKBvsQPptdGctcDVnOB3JzondJbwHA&callback=initMap"></script>
 
 </body>
 

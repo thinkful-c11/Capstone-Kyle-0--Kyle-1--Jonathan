@@ -7,71 +7,71 @@ html, body {
 
 #map {
   height: 100%;
-  width:75%;
+  width: 75%;
 }
 
 .info-title {
-    font-size: 25px;
-    text-align: center;
-    letter-spacing: 1px;
+  font-size: 25px;
+  text-align: center;
+  letter-spacing: 1px;
 }
 
 .information {
-    display: inline-block;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 25%;
-    height: 100%;
-    background-color: #85b3fc;
+  display: inline-block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 25%;
+  height: 100%;
+  background-color: #85b3fc;
 }
 
 .button-container {
-    width: 100%;
-    height: 50px;
-    padding: 0;
-    margin: 0;
+  width: 100%;
+  height: 50px;
+  padding: 0;
+  margin: 0;
 }
 
-.forecast-button  {
-    width: 33.33%;
-    height: 100%;
-    display: block;
-    float: left;
-    font-size: 145%;
-    border: 1px solid;
-    background-color: #85b3fc;
+.forecast-button {
+  width: 33.33%;
+  height: 100%;
+  display: block;
+  float: left;
+  font-size: 145%;
+  border: 1px solid;
+  background-color: #85b3fc;
 }
 
 .forecast-button-selected {
-    width: 33.33%;
-    height: 100%;
-    display: block;
-    float: left;
-    font-size: 30px;
-    border: 1px solid;
-    background-color: #f49542;
+  width: 33.33%;
+  height: 100%;
+  display: block;
+  float: left;
+  font-size: 30px;
+  border: 1px solid;
+  background-color: #f49542;
 }
 
 .welcome {
-    text-align: center;
-    font-size: 18px;
+  text-align: center;
+  font-size: 18px;
 }
 
 .zip-code-submit {
-    background-color: rgb(133, 179, 252);
-    border-width: 0;
-    color: black;
-    outline: none;
-    margin-left: 43%;
+  background-color: rgb(133, 179, 252);
+  border-width: 0;
+  color: black;
+  outline: none;
+  margin-left: 43%;
 }
 
 .style-bar {
-    margin-top: 2px;
-    height: 2px;
-    width: 33%;
-    background-color: black;
-    margin-left: 32%;
+  margin-top: 2px;
+  height: 2px;
+  width: 33%;
+  background-color: black;
+  margin-left: 32%;
 }
 
 .country {
@@ -79,47 +79,43 @@ html, body {
 }
 
 .city-name {
-    font-size: 28px;
-    text-align: center;
+  font-size: 28px;
+  text-align: center;
 }
 
 p {
-    text-align: center;
+  text-align: center;
 }
 
 img {
-    position: absolute;
-    margin-left: 25%;
-    height: 100px;
-    width: 100px;
+  position: absolute;
+  margin-left: 25%;
+  height: 100px;
+  width: 100px;
 }
 
 @media only screen and (max-width: 480px) {
-    html, body {
-        width: 100%;
-    }
-
-    #map{
-        height: 60%;
-        width: 100%;
-    }
-    
-    .information{
-        display: block;
-        position: relative;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
-    }
-
-    img {
+  html, body {
+    width: 100%;
+  }
+  #map {
+    height: 60%;
+    width: 100%;
+  }
+  .information {
+    display: block;
+    position: relative;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+  img {
     position: absolute;
     margin-left: 80px;
     height: 100px;
     width: 100px;
-    }
-
-    .forecast-button {
-        font-size: 23px;
-    }
+  }
+  .forecast-button {
+    font-size: 23px;
+  }
 }

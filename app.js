@@ -1,10 +1,9 @@
-/* global google
-  global $
-  global navigator
-*/
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////        appState + helper functions ////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+/*global google */
+'use strict';
+
 const appState = {
   dayOfWeek: null,
   yourLoc: {},
@@ -38,62 +37,62 @@ const appState = {
     cityName: null,
   },
   tommorrowForecast: {
-    city:{
+    city: {
       name: null,
       country: null,
     },
-    list:[],
+    list: [],
   },
-  highestTemp:Number.NEGATIVE_INFINITY,
-  lowestTemp:Number.POSITIVE_INFINITY,
+  highestTemp: Number.NEGATIVE_INFINITY,
+  lowestTemp: Number.POSITIVE_INFINITY,
   dayAfterForecast: {
-    city:{
+    city: {
       name: null,
       country: null,
     },
-    list:[],
+    list: [],
   },
 };
 
 //Convert Kelvin to Farenheit
 function KtoF(temp) {
-  return ((9/5*(temp - 273) + 32)*100)/100;
+  return ((9 / 5 * (temp - 273) + 32) * 100) / 100;
 }
 
 //Display the direction wind is blowing
-function windDirection(deg){
-  let direction = "North";
-  switch(deg){
-    case 0:
-      direction = "North";
-      break;
-    case 90:
-      direction = "East";
-      break;
-    case 180:
-      direction = "South";
-      break;
-    case 270:
-      direction = "West";
-      break;
-    default:
-      if(deg>0 && deg < 90) direction="NorthEast";
-      else if(deg>90 && deg<180) direction = "SouthEast";
-      else if(deg>180 && deg<270) direction = "SouthWest";
-      else direction = "NorthWest";
+function windDirection(deg) {
+  let direction = 'North';
+  switch (deg) {
+  case 0:
+    direction = 'North';
+    break;
+  case 90:
+    direction = 'East';
+    break;
+  case 180:
+    direction = 'South';
+    break;
+  case 270:
+    direction = 'West';
+    break;
+  default:
+    if (deg > 0 && deg < 90) direction = 'NorthEast';
+    else if (deg > 90 && deg < 180) direction = 'SouthEast';
+    else if (deg > 180 && deg < 270) direction = 'SouthWest';
+    else direction = 'NorthWest';
   }
   return direction;
 }
 //Getting tommorrow
-function getNewDay1(response){
+function getNewDay1(response) {
   const d = new Date();
-  const arr = response.list.filter(el=>grabDateFromString(el.dt_txt) ===`${d.getDate() +1}`);
+  const arr = response.list.filter(el => grabDateFromString(el.dt_txt) === `${d.getDate() +1}`);
   return arr;
 }
 //Getting Day After
-function getNewDay2(response){
+function getNewDay2(response) {
   const d = new Date();
-  const arr = response.list.filter(el=>grabDateFromString(el.dt_txt) ===`${d.getDate() +2}`);
+  const arr = response.list.filter(el => grabDateFromString(el.dt_txt) === `${d.getDate() +2}`);
   return arr;
 }
 /////////////////////////////////////////////////////////////////////
@@ -114,11 +113,11 @@ function setLatLng(pos, state) {
   return state.yourLoc;
 }
 //Set Marker Lat and Lng
-function setMarkerLatLng(data,state){
-    const markerLoc = state.markerLocation;
-    markerLoc.lat = data.latLng.lat();
-    markerLoc.lng = data.latLng.lng();
-    return markerLoc;
+function setMarkerLatLng(data, state) {
+  const markerLoc = state.markerLocation;
+  markerLoc.lat = data.latLng.lat();
+  markerLoc.lng = data.latLng.lng();
+  return markerLoc;
 }
 
 //make a marker every time u click
@@ -136,79 +135,62 @@ function clearMarker(state) {
 }
 
 //date stuff
-function grabDateFromString(str){
-  return str.substring(8,10);
+function grabDateFromString(str) {
+  return str.substring(8, 10);
 }
 
 //highest temperature object
-function highTemp(fun,state){
+function highTemp(fun, state) {
   const newDayList = fun;
-  const highestTempArr = newDayList.filter(el=>el.main.temp_max === max(el.main.temp_max,state));
-  return highestTempArr[highestTempArr.length -1];
+  const highestTempArr = newDayList.filter(el => el.main.temp_max === max(el.main.temp_max, state));
+  return highestTempArr[highestTempArr.length - 1];
 }
 //lowest temperature object
-function lowTemp(fun,state){
+function lowTemp(fun, state) {
   const newDayList = fun;
-  const lowestTempArr = newDayList.filter(el=>el.main.temp_min === min(el.main.temp_min,state));
-  return lowestTempArr[lowestTempArr.length -1];
+  const lowestTempArr = newDayList.filter(el => el.main.temp_min === min(el.main.temp_min, state));
+  return lowestTempArr[lowestTempArr.length - 1];
 }
 
 //set the max temperature
-function max(temp,state){
-  if(temp >state.highestTemp){
+function max(temp, state) {
+  if (temp > state.highestTemp) {
     state.highestTemp = temp;
   }
   return state.highestTemp;
 }
 
 //set min temperature
-function min(temp,state){
-  if(temp <state.lowestTemp){
+function min(temp, state) {
+  if (temp < state.lowestTemp) {
     state.lowestTemp = temp;
   }
   return state.lowestTemp;
 }
 //adding the low temp and high temp obj to state
-function addLowHighObj(response,state, forecast,fun){
-  forecast.list.push(highTemp(fun,state));
-  forecast.list.push(lowTemp(fun,state));
+function addLowHighObj(response, state, forecast, fun) {
+  forecast.list.push(highTemp(fun, state));
+  forecast.list.push(lowTemp(fun, state));
   return forecast.list;
 }
 //reset highest and lowest temp
-function resetHLTemp(state){
-  state.highestTemp=Number.NEGATIVE_INFINITY;
-  state.lowestTemp=Number.POSITIVE_INFINITY;
+function resetHLTemp(state) {
+  state.highestTemp = Number.NEGATIVE_INFINITY;
+  state.lowestTemp = Number.POSITIVE_INFINITY;
 }
 //reset list
-function resetHLList(forecast){
+function resetHLList(forecast) {
   forecast.list = [];
   return forecast.list.length;
 }
 
-function setCountryCity(state,response){
+function setCountryCity(state, response) {
   state.tommorrowForecast.city.country = response.city.country;
   state.tommorrowForecast.city.name = response.city.name;
   state.dayAfterForecast.city.country = response.city.country;
   state.dayAfterForecast.city.name = response.city.name;
 }
 
-// TO FIX
-// function setDaysOfWeek(state) {
-//   const today = new Date().getDay();
-//   const days = [
-//     "Monday",
-//     "Tuesday",
-//     "Wednesday",
-//     "Thursday",
-//     "Friday",
-//     "Saturday",
-//     "Sunday",
-//     "Monday",
-//     "Tuesday"];
-//   $('#current').text(days[today]);
-//   $('#tommorrow').text(days[today + 1]);
-//   $('#day-after').text(days[today + 2]);
-// }
 
 /////////////////////////////////////////////////////////////////////
 //////////////     OpenWeather          //////////////////////
@@ -221,13 +203,13 @@ function queryOpenWeather(state) {
   };
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
-    addDailyWeatherToState(state , response);
+    addDailyWeatherToState(state, response);
   });
   $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters, response => {
     resetHLTemp(state);
     resetHLList(state.tommorrowForecast);
     resetHLList(state.dayAfterForecast);
-    setCountryCity(state,response);
+    setCountryCity(state, response);
     addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
     resetHLTemp(state);
     addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
@@ -240,27 +222,27 @@ function queryOpenWeatherZip(state, code) {
   };
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters)
-            .done(response => {
-                      addDailyWeatherToState(state, response);
+    .done(response => {
+      addDailyWeatherToState(state, response);
 
-                      clearMarker(state);
-                      makeMarker(state);
-            })
+      clearMarker(state);
+      makeMarker(state);
+    });
 
   $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters)
-            .done(response => {
-              resetHLTemp(state);
-              resetHLList(state.tommorrowForecast);
-              resetHLList(state.dayAfterForecast);
-              setCountryCity(state,response);
-              addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
-              resetHLTemp(state);
-              addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
-            })
-            .fail(error => {
-              alert("That zip code does not exist.")
-            })
-      
+    .done(response => {
+      resetHLTemp(state);
+      resetHLList(state.tommorrowForecast);
+      resetHLList(state.dayAfterForecast);
+      setCountryCity(state, response);
+      addLowHighObj(response, state, state.tommorrowForecast, getNewDay1(response));
+      resetHLTemp(state);
+      addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
+    })
+    .fail(() => {
+      alert('That zip code does not exist.');
+    });
+
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -289,7 +271,7 @@ const renderForecast = function(state, element) {
           <p>${weather.main.humidity}% humidity</p>
           <p>Wind is blowing ${weather.wind.speed} meter/sec to the ${windDirection(weather.wind.degrees)}.</p>
           <p>${weather.clouds.all}% cloudy</p>`);
-}
+};
 
 //////////////////////////////////////////////////////////////
 ///////////          CALLBACK FUNCTIONS        /////////////
@@ -316,7 +298,7 @@ const addDailyWeatherToState = function(state, response) {
 
     daily.cityName = response.name;
 
-    if(response.coord) {
+    if (response.coord) {
       state.markerLocation.lat = response.coord.lat;
       state.markerLocation.lng = response.coord.lon;
 
@@ -326,16 +308,16 @@ const addDailyWeatherToState = function(state, response) {
 };
 
 //Google
-function callbackGoogle(response){
-    if (response !== null) { // if not initial query
-      clearMarker(appState);
-      setMarkerLatLng(response, appState);
-      makeMarker(appState);
-    }
-    queryOpenWeather(appState);
+function callbackGoogle(response) {
+  if (response !== null) { // if not initial query
+    clearMarker(appState);
+    setMarkerLatLng(response, appState);
+    makeMarker(appState);
+  }
+  queryOpenWeather(appState);
 }
 
-const eventListeners = function(state){
+const eventListeners = function(state) {
 
   const weatherInformation = $('.weather-information');
 
@@ -344,18 +326,18 @@ const eventListeners = function(state){
     queryOpenWeatherZip(state, $('.zip-code-submit').val());
   });
 
-  $('#current').click(function(event){
+  $('#current').click(() => {
     renderDailyWeather(state, weatherInformation);
-  })
+  });
 
-  $('#tommorrow').click(function(event) {
+  $('#tommorrow').click(() => {
     renderForecast(state.tommorrowForecast, weatherInformation);
   });
 
-  $('#day-after').click(function(event) {
+  $('#day-after').click(() => {
     renderForecast(state.dayAfterForecast, weatherInformation);
-  })
-}
+  });
+};
 
 // TO FIX
 // $().ready(function() {
@@ -399,7 +381,7 @@ function getYourCoords(infoWindow, state) {
       //modification to state
       setLatLng(pos, state);
 
-      callbackGoogle(null)
+      callbackGoogle(null);
       infoWindow.setPosition(pos);
       infoWindow.setContent('Location found.');
       infoWindow.open(state.map);
