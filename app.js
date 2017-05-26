@@ -59,7 +59,8 @@ const appState = {
 function KtoF(temp) {
   return ((9/5*(temp - 273) + 32)*100)/100;
 }
-
+//Single Quotes for strings
+//indentation should be 4 spaces not 6
 //Display the direction wind is blowing
 function windDirection(deg){
   let direction = "North";
@@ -113,6 +114,7 @@ function setLatLng(pos, state) {
   yourLoc.lng = pos.lng;
   return state.yourLoc;
 }
+//indentation of 2 spaces instead of 4
 //Set Marker Lat and Lng
 function setMarkerLatLng(data,state){
     const markerLoc = state.markerLocation;
@@ -153,6 +155,7 @@ function lowTemp(fun,state){
   return lowestTempArr[lowestTempArr.length -1];
 }
 
+//maxTemp instead of just max
 //set the max temperature
 function max(temp,state){
   if(temp >state.highestTemp){
@@ -161,6 +164,7 @@ function max(temp,state){
   return state.highestTemp;
 }
 
+// minTemp instead of just min
 //set min temperature
 function min(temp,state){
   if(temp <state.lowestTemp){
@@ -241,11 +245,12 @@ function queryOpenWeatherZip(state, code) {
 
   $.getJSON('http://api.openweathermap.org/data/2.5/weather?APPID=4902823442c59be1e82130ed0fb15339', parameters)
             .done(response => {
+              //indentation should be of 14 instead of 22
                       addDailyWeatherToState(state, response);
 
                       clearMarker(state);
                       makeMarker(state);
-            })
+            }) //missing semicolon
 
   $.getJSON('http://api.openweathermap.org/data/2.5/forecast?APPID=4902823442c59be1e82130ed0fb15339', parameters)
             .done(response => {
@@ -258,8 +263,8 @@ function queryOpenWeatherZip(state, code) {
               addLowHighObj(response, state, state.dayAfterForecast, getNewDay2(response));
             })
             .fail(error => {
-              alert("That zip code does not exist.")
-            })
+              alert("That zip code does not exist.") //single quotes & missing semicolon
+            }) //missing semicolon
       
 }
 
@@ -289,7 +294,7 @@ const renderForecast = function(state, element) {
           <p>${weather.main.humidity}% humidity</p>
           <p>Wind is blowing ${weather.wind.speed} meter/sec to the ${windDirection(weather.wind.degrees)}.</p>
           <p>${weather.clouds.all}% cloudy</p>`);
-}
+} //missing semicolon
 
 //////////////////////////////////////////////////////////////
 ///////////          CALLBACK FUNCTIONS        /////////////
@@ -327,11 +332,13 @@ const addDailyWeatherToState = function(state, response) {
 
 //Google
 function callbackGoogle(response){
+  //indentation should be of 2 instead of 4
     if (response !== null) { // if not initial query
       clearMarker(appState);
       setMarkerLatLng(response, appState);
       makeMarker(appState);
     }
+    //indentation should be of 2 instead of 4
     queryOpenWeather(appState);
 }
 
@@ -343,7 +350,7 @@ const eventListeners = function(state){
     event.preventDefault();
     queryOpenWeatherZip(state, $('.zip-code-submit').val());
   });
-
+//missing semicolon
   $('#current').click(function(event){
     renderDailyWeather(state, weatherInformation);
   })
@@ -351,10 +358,11 @@ const eventListeners = function(state){
   $('#tommorrow').click(function(event) {
     renderForecast(state.tommorrowForecast, weatherInformation);
   });
-
+//missing semicolon
   $('#day-after').click(function(event) {
     renderForecast(state.dayAfterForecast, weatherInformation);
   })
+  //missing semicolon
 }
 
 // TO FIX
@@ -366,6 +374,7 @@ const eventListeners = function(state){
 ///////////          Google Stuff              /////////////
 ///////////////////////////////////////////////////////////
 
+//function is never used
 //Google Maps Javascript API
 function initMap() {
   var uluru = {
@@ -399,6 +408,7 @@ function getYourCoords(infoWindow, state) {
       //modification to state
       setLatLng(pos, state);
 
+//missing semicolon
       callbackGoogle(null)
       infoWindow.setPosition(pos);
       infoWindow.setContent('Location found.');
